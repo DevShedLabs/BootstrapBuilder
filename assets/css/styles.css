@@ -112,41 +112,41 @@
 }
 
 .component-icon {
-	width: 22px;
-	height: 22px;
+	width:     22px;
+	height:    22px;
 	font-size: 22px;
 }
 
 .main-actions .action-icon {
-	width:  16px;
-	height: 16px;
+	width:        16px;
+	height:       16px;
 	margin-right: 5px;
-	font-size:16px;
+	font-size:    16px;
 }
 
 .action-icon {
-	width:  16px;
-	height: 16px;
+	width:        16px;
+	height:       16px;
 	margin-right: 0;
-	font-size:16px;
+	font-size:    16px;
 }
 
 .empty-canvas-icon {
 	width:         48px;
 	height:        48px;
 	margin-bottom: 15px;
-	font-size: 48px;
+	font-size:     48px;
 }
 
 .handle-icon {
 	cursor: move;
-	width: 16px;
+	width:  16px;
 	height: 16px;
-	color: #6c757d;
+	color:  #6c757d;
 }
 
 .component-content {
-	position: relative;
+	position:   relative;
 	min-height: 30px;
 }
 
@@ -154,3 +154,107 @@
 	transition: opacity 0.2s ease;
 }
 
+.nestable {
+	position: relative;
+}
+
+.nestable.drag-over {
+	background-color: rgba(13, 110, 253, 0.1);
+	border:           2px dashed #0d6efd;
+}
+
+.nestable.drag-over::after {
+	content:        "Drop here";
+	position:       absolute;
+	top:            50%;
+	left:           50%;
+	transform:      translate(-50%, -50%);
+	color:          #0d6efd;
+	font-size:      14px;
+	pointer-events: none;
+}
+
+.component-wrapper .component-wrapper {
+	margin-left: 20px;
+	margin-top:  10px;
+	border-left: 2px solid #dee2e6;
+}
+
+/* Style adjustments for nested components */
+.component-wrapper .component-content {
+	min-height:    40px;
+	padding:       8px;
+	border-radius: 4px;
+	transition:    background-color 0.2s;
+}
+
+/* Visual feedback for dragging */
+.component-wrapper.dragging {
+	opacity: 0.5;
+}
+
+/* Override some existing styles */
+.dropzone {
+	position:   relative;
+	min-height: 200px;
+}
+
+.dropzone.active {
+	background-color: rgba(13, 110, 253, 0.1);
+}
+
+/* Base icon styles */
+.lucide {
+	width:           16px;
+	height:          16px;
+	stroke-width:    2;
+	stroke-linecap:  round;
+	stroke-linejoin: round;
+	fill:            none;
+}
+
+/* Component sidebar icons */
+.component-icon {
+	width:        22px;
+	height:       22px;
+	margin-right: 8px;
+}
+
+/* Main action icons in header */
+.main-actions .lucide {
+	width:        18px;
+	height:       18px;
+	margin-right: 5px;
+}
+
+/* Button action icons */
+.btn .lucide {
+	width:        16px;
+	height:       16px;
+	margin-right: 4px;
+	margin-top:   -4px;
+}
+
+/* Empty canvas plus icon */
+.empty-canvas-icon {
+	width:         48px !important;
+	height:        48px !important;
+	margin-bottom: 15px;
+	color:         #6c757d;
+}
+
+/* Grip handle for dragging */
+.grip-handle {
+	width:        16px;
+	height:       16px;
+	color:        #6c757d;
+	cursor:       move;
+	margin-right: 8px;
+}
+
+/* Export and preview modal icons */
+.modal .lucide {
+	width:        16px;
+	height:       16px;
+	margin-right: 4px;
+}
