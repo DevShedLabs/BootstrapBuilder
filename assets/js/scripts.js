@@ -1,40 +1,29 @@
 const { useState, useEffect, useRef } = React;
 
-// Icon component
 const Icon = ( { name, className = "" } ) => {
-    const iconRef = useRef();
-
-    useEffect( () => {
-        if ( iconRef.current ) {
-            lucide.createIcons( {
-                elements: [ iconRef.current ]
-            } );
-        }
-    }, [ name ] );
-
-    return <i ref={iconRef} data-lucide={name} className={className}></i>;
+    return <i className={`fa fa-${name} ${className}`}></i>;
 };
 
 // Component Templates
 const componentTemplates = {
     container:       {
         name:     'Container',
-        icon:     'box',
+        icon:     'square',
         template: '<div class="container">Container content</div>'
     },
     fluid_container: {
         name:     'Fluid Container',
-        icon:     'box',
+        icon:     'square-full',
         template: '<div class="container-fluid">Fluid Container content</div>'
     },
     section:         {
         name:     'Section',
-        icon:     'box',
+        icon:     'bars-progress',
         template: '<section class="section">Section content</section>'
     },
     row:             {
         name:     'Row',
-        icon:     'layout',
+        icon:     'bars',
         template: '<div class="row">Row content</div>'
     },
     col:             {
@@ -44,22 +33,22 @@ const componentTemplates = {
     },
     heading:         {
         name:     'Heading',
-        icon:     'type',
+        icon:     'heading',
         template: '<h2>Heading</h2>'
     },
     paragraph:       {
         name:     'Paragraph',
-        icon:     'align-left',
+        icon:     'paragraph',
         template: '<p>Lorem ipsum dolor sit amet</p>'
     },
     button:          {
         name:     'Button',
-        icon:     'square',
+        icon:     'hand-pointer',
         template: '<button class="btn btn-primary">Button</button>'
     },
     card:            {
         name:     'Card',
-        icon:     'credit-card',
+        icon:     'id-card',
         template: `
             <div class="card">
                 <div class="card-body">
@@ -71,7 +60,7 @@ const componentTemplates = {
     },
     alert:           {
         name:     'Alert',
-        icon:     'alert-triangle',
+        icon:     'warning',
         template: '<div class="alert alert-primary">Alert message</div>'
     }
 };
@@ -129,7 +118,7 @@ function ComponentWrapper( { component, onRemove, onEdit, index, moveComponent }
         >
             <div className="component-header">
                 <span className="d-flex align-items-center">
-                    <Icon name="grip" className="handle-icon me-2" />
+                    <Icon name="grip" className="fa fa-grip-vertical me-2" />
                     <Icon name={componentTemplates[ component.type ].icon} className="component-icon" />
                     {componentTemplates[ component.type ].name}
                 </span>
@@ -138,13 +127,13 @@ function ComponentWrapper( { component, onRemove, onEdit, index, moveComponent }
                         className="btn btn-sm btn-outline-primary me-2"
                         onClick={() => setIsEditing( !isEditing )}
                     >
-                        <Icon name="edit-2" className="action-icon" />
+                        <Icon name="pencil" className="action-icon" />
                     </button>
                     <button
                         className="btn btn-sm btn-outline-danger"
                         onClick={() => onRemove( component.id )}
                     >
-                        <Icon name="trash-2" className="action-icon" />
+                        <Icon name="trash" className="action-icon" />
                     </button>
                 </div>
             </div>
@@ -242,9 +231,9 @@ function App() {
     const [ showExport, setShowExport ]             = useState( false );
 
     useEffect( () => {
-        lucide.createIcons( {
-            elements: document.querySelectorAll( '[data-lucide]' )
-        } );
+        // lucide.createIcons( {
+        //     elements: document.querySelectorAll( '[data-lucide]' )
+        // } );
     }, [ components, showPreview, showExport ] );
 
     const handleDragStart = ( componentType ) => {
@@ -320,7 +309,7 @@ function App() {
             <div className="builder-content">
                 <div className="d-flex justify-content-between mb-4">
                     <h2>Bootstrap 5 Layout Builder</h2>
-                    <div>
+                    <div className="main-actions">
                         <button className="btn btn-secondary me-2" onClick={() => setShowPreview( true )}>
                             <Icon name="eye" className="action-icon" /> Preview
                         </button>

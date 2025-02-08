@@ -107,25 +107,35 @@
 	bottom:           0;
 }
 
-.component-header span svg {
+.component-header span i {
 	margin-right: 8px;
 }
 
 .component-icon {
-	width:        18px;
-	height:       18px;
-	margin-right: 8px;
+	width: 22px;
+	height: 22px;
+	font-size: 22px;
+}
+
+.main-actions .action-icon {
+	width:  16px;
+	height: 16px;
+	margin-right: 5px;
+	font-size:16px;
 }
 
 .action-icon {
 	width:  16px;
 	height: 16px;
+	margin-right: 0;
+	font-size:16px;
 }
 
 .empty-canvas-icon {
 	width:         48px;
 	height:        48px;
 	margin-bottom: 15px;
+	font-size: 48px;
 }
 
 .handle-icon {
@@ -143,3 +153,4 @@
 .component-wrapper {
 	transition: opacity 0.2s ease;
 }
+
