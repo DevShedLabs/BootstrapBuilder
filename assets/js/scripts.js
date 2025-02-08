@@ -1,58 +1,251 @@
+const { useState, useEffect, useRef } = React;
+
+// Icon component
+const Icon = ( { name, className = "" } ) => {
+    const iconRef = useRef();
+
+    useEffect( () => {
+        if ( iconRef.current ) {
+            lucide.createIcons( {
+                elements: [ iconRef.current ]
+            } );
+        }
+    }, [ name ] );
+
+    return <i ref={iconRef} data-lucide={name} className={className}></i>;
+};
+
+// Component Templates
 const componentTemplates = {
-    container: {
+    container:       {
         name:     'Container',
-        icon:     'Box',
+        icon:     'box',
         template: '<div class="container">Container content</div>'
     },
-    row:       {
+    fluid_container: {
+        name:     'Fluid Container',
+        icon:     'box',
+        template: '<div class="container-fluid">Fluid Container content</div>'
+    },
+    section:         {
+        name:     'Section',
+        icon:     'box',
+        template: '<section class="section">Section content</section>'
+    },
+    row:             {
         name:     'Row',
-        icon:     'Layout',
+        icon:     'layout',
         template: '<div class="row">Row content</div>'
     },
-    col:       {
+    col:             {
         name:     'Column',
-        icon:     'Columns',
+        icon:     'columns',
         template: '<div class="col">Column content</div>'
     },
-    heading:   {
+    heading:         {
         name:     'Heading',
-        icon:     'Type',
+        icon:     'type',
         template: '<h2>Heading</h2>'
     },
-    paragraph: {
+    paragraph:       {
         name:     'Paragraph',
-        icon:     'AlignLeft',
+        icon:     'align-left',
         template: '<p>Lorem ipsum dolor sit amet</p>'
     },
-    button:    {
+    button:          {
         name:     'Button',
-        icon:     'Square',
+        icon:     'square',
         template: '<button class="btn btn-primary">Button</button>'
     },
-    card:      {
+    card:            {
         name:     'Card',
-        icon:     'CreditCard',
+        icon:     'credit-card',
         template: `
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Card content</p>
-                        </div>
-                    </div>
-                `
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Card content</p>
+                </div>
+            </div>
+        `
     },
-    alert:     {
+    alert:           {
         name:     'Alert',
-        icon:     'AlertTriangle',
+        icon:     'alert-triangle',
         template: '<div class="alert alert-primary">Alert message</div>'
     }
 };
 
+function ComponentWrapper( { component, onRemove, onEdit, index, moveComponent } ) {
+    const [ isEditing, setIsEditing ]     = useState( false );
+    const [ editContent, setEditContent ] = useState( component.content );
+    const elementRef                      = useRef( null );
+
+    const handleDragStart = ( e ) => {
+        e.stopPropagation();
+        e.dataTransfer.setData( 'text/plain', index.toString() );
+        e.dataTransfer.effectAllowed = 'move';
+
+        setTimeout( () => {
+            if ( elementRef.current ) {
+                elementRef.current.style.opacity = '0.5';
+            }
+        }, 0 );
+    };
+
+    const handleDragEnd = () => {
+        if ( elementRef.current ) {
+            elementRef.current.style.opacity = '1';
+        }
+    };
+
+    const handleDragOver = ( e ) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    const handleDrop = ( e ) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const dragIndex = parseInt( e.dataTransfer.getData( 'text/plain' ) );
+        if ( dragIndex !== index ) {
+            moveComponent( dragIndex, index );
+        }
+    };
+
+    useEffect( () => {
+        setEditContent( component.content );
+    }, [ component.content ] );
+
+    return (
+        <div
+            ref={elementRef}
+            className="component-wrapper"
+            draggable
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+        >
+            <div className="component-header">
+                <span className="d-flex align-items-center">
+                    <Icon name="grip" className="handle-icon me-2" />
+                    <Icon name={componentTemplates[ component.type ].icon} className="component-icon" />
+                    {componentTemplates[ component.type ].name}
+                </span>
+                <div>
+                    <button
+                        className="btn btn-sm btn-outline-primary me-2"
+                        onClick={() => setIsEditing( !isEditing )}
+                    >
+                        <Icon name="edit-2" className="action-icon" />
+                    </button>
+                    <button
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => onRemove( component.id )}
+                    >
+                        <Icon name="trash-2" className="action-icon" />
+                    </button>
+                </div>
+            </div>
+            {isEditing ? (
+                <div className="mt-3">
+                    <textarea
+                        className="form-control mb-2"
+                        value={editContent}
+                        onChange={( e ) => setEditContent( e.target.value )}
+                        rows="3"
+                    />
+                    <div className="d-flex gap-2">
+                        <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() => {
+                                onEdit( component.id, editContent );
+                                setIsEditing( false );
+                            }}
+                        >
+                            Save Changes
+                        </button>
+                        <button
+                            className="btn btn-secondary btn-sm"
+                            onClick={() => {
+                                setEditContent( component.content );
+                                setIsEditing( false );
+                            }}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                 <div className="component-content mt-2">
+                     <div dangerouslySetInnerHTML={{ __html: component.content }} />
+                 </div>
+             )}
+        </div>
+    );
+}
+
+function PreviewModal( { html, onClose } ) {
+    return (
+        <>
+            <div className="modal-backdrop" onClick={onClose}></div>
+            <div className="modal preview-modal show d-block" tabIndex="-1">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Preview</h5>
+                            <button type="button" className="btn-close" onClick={onClose}></button>
+                        </div>
+                        <div className="modal-body">
+                            <div dangerouslySetInnerHTML={{ __html: html }} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
+
+function ExportModal( { html, onClose } ) {
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText( html );
+    };
+
+    return (
+        <>
+            <div className="modal-backdrop" onClick={onClose}></div>
+            <div className="modal show d-block" tabIndex="-1">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Export HTML</h5>
+                            <button type="button" className="btn-close" onClick={onClose}></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="export-code">{html}</div>
+                            <button className="btn btn-primary mt-3" onClick={copyToClipboard}>
+                                <Icon name="clipboard" className="action-icon" /> Copy to Clipboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
+
 function App() {
-    const [ components, setComponents ]             = React.useState( [] );
-    const [ draggedComponent, setDraggedComponent ] = React.useState( null );
-    const [ showPreview, setShowPreview ]           = React.useState( false );
-    const [ showExport, setShowExport ]             = React.useState( false );
+    const [ components, setComponents ]             = useState( [] );
+    const [ draggedComponent, setDraggedComponent ] = useState( null );
+    const [ showPreview, setShowPreview ]           = useState( false );
+    const [ showExport, setShowExport ]             = useState( false );
+
+    useEffect( () => {
+        lucide.createIcons( {
+            elements: document.querySelectorAll( '[data-lucide]' )
+        } );
+    }, [ components, showPreview, showExport ] );
 
     const handleDragStart = ( componentType ) => {
         setDraggedComponent( componentType );
@@ -60,13 +253,17 @@ function App() {
 
     const handleDrop = ( e ) => {
         e.preventDefault();
+        e.currentTarget.classList.remove( 'active' );
+
         if ( draggedComponent ) {
-            const newComponent = {
-                id:      Date.now(),
-                type:    draggedComponent,
-                content: componentTemplates[ draggedComponent ].template
-            };
-            setComponents( [ ...components, newComponent ] );
+            setComponents( prevComponents => [
+                ...prevComponents,
+                {
+                    id:      Date.now(),
+                    type:    draggedComponent,
+                    content: componentTemplates[ draggedComponent ].template
+                }
+            ] );
             setDraggedComponent( null );
         }
     };
@@ -81,20 +278,22 @@ function App() {
     };
 
     const removeComponent = ( id ) => {
-        setComponents( components.filter( c => c.id !== id ) );
+        setComponents( prevComponents => prevComponents.filter( c => c.id !== id ) );
     };
 
     const editComponent = ( id, newContent ) => {
-        setComponents( components.map( c =>
-            c.id === id ? { ...c, content: newContent } : c
-        ) );
+        setComponents( prevComponents =>
+            prevComponents.map( c => c.id === id ? { ...c, content: newContent } : c )
+        );
     };
 
     const moveComponent = ( dragIndex, hoverIndex ) => {
-        const newComponents   = [ ...components ];
-        const [ draggedItem ] = newComponents.splice( dragIndex, 1 );
-        newComponents.splice( hoverIndex, 0, draggedItem );
-        setComponents( newComponents );
+        setComponents( prevComponents => {
+            const newComponents = [ ...prevComponents ];
+            const [ removed ]   = newComponents.splice( dragIndex, 1 );
+            newComponents.splice( hoverIndex, 0, removed );
+            return newComponents;
+        } );
     };
 
     const generateHTML = () => {
@@ -112,7 +311,7 @@ function App() {
                         draggable
                         onDragStart={() => handleDragStart( type )}
                     >
-                        <i data-lucide={info.icon}></i>
+                        <Icon name={info.icon} className="component-icon" />
                         {info.name}
                     </div>
                 ) )}
@@ -120,19 +319,13 @@ function App() {
 
             <div className="builder-content">
                 <div className="d-flex justify-content-between mb-4">
-                    <h2>Layout Builder</h2>
+                    <h2>Bootstrap 5 Layout Builder</h2>
                     <div>
-                        <button
-                            className="btn btn-secondary me-2"
-                            onClick={() => setShowPreview( true )}
-                        >
-                            <i data-lucide="Eye"></i> Preview
+                        <button className="btn btn-secondary me-2" onClick={() => setShowPreview( true )}>
+                            <Icon name="eye" className="action-icon" /> Preview
                         </button>
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => setShowExport( true )}
-                        >
-                            <i data-lucide="Code"></i> Export
+                        <button className="btn btn-primary" onClick={() => setShowExport( true )}>
+                            <Icon name="code" className="action-icon" /> Export
                         </button>
                     </div>
                 </div>
@@ -145,7 +338,7 @@ function App() {
                 >
                     {components.length === 0 ? (
                         <>
-                            <i data-lucide="PlusCircle" className="mb-2"></i>
+                            <Icon name="plus-circle" className="empty-canvas-icon" />
                             <p>Drag components here</p>
                         </>
                     ) : (
@@ -162,157 +355,16 @@ function App() {
                      )}
                 </div>
 
-                {/* Preview Modal */}
                 {showPreview && (
-                    <PreviewModal
-                        html={generateHTML()}
-                        onClose={() => setShowPreview( false )}
-                    />
+                    <PreviewModal html={generateHTML()} onClose={() => setShowPreview( false )} />
                 )}
-
-                {/* Export Modal */}
                 {showExport && (
-                    <ExportModal
-                        html={generateHTML()}
-                        onClose={() => setShowExport( false )}
-                    />
+                    <ExportModal html={generateHTML()} onClose={() => setShowExport( false )} />
                 )}
             </div>
         </div>
     );
 }
-
-function ComponentWrapper( { component, onRemove, onEdit, index, moveComponent } ) {
-    const [ isEditing, setIsEditing ]     = React.useState( false );
-    const [ editContent, setEditContent ] = React.useState( component.content );
-
-    const handleSave = () => {
-        onEdit( component.id, editContent );
-        setIsEditing( false );
-    };
-
-    const dragRef = React.useRef( null );
-
-    const handleDragStart = ( e ) => {
-        e.dataTransfer.setData( 'text/plain', index );
-    };
-
-    const handleDragOver = ( e ) => {
-        e.preventDefault();
-        const draggedIndex = parseInt( e.dataTransfer.getData( 'text/plain' ) );
-        if ( draggedIndex !== index ) {
-            moveComponent( draggedIndex, index );
-        }
-    };
-
-    return (
-        <div
-            className="component-wrapper"
-            ref={dragRef}
-            draggable
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-        >
-            <div className="component-header">
-                <span>
-                    <i data-lucide={componentTemplates[ component.type ].icon}></i>
-                    {componentTemplates[ component.type ].name}
-                </span>
-                <div>
-                    <button
-                        className="btn btn-sm btn-outline-primary me-2"
-                        onClick={() => setIsEditing( !isEditing )}
-                    >
-                        <i data-lucide="Edit2"></i>
-                    </button>
-                    <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => onRemove( component.id )}
-                    >
-                        <i data-lucide="Trash2"></i>
-                    </button>
-                </div>
-            </div>
-            {isEditing ? (
-                <div>
-                            <textarea
-                                className="form-control mb-2"
-                                value={editContent}
-                                onChange={( e ) => setEditContent( e.target.value )}
-                                rows="3"
-                            />
-                    <button
-                        className="btn btn-primary btn-sm"
-                        onClick={handleSave}
-                    >
-                        Save Changes
-                    </button>
-                </div>
-            ) : (
-                 <div dangerouslySetInnerHTML={{ __html: component.content }} />
-             )}
-        </div>
-    );
-}
-
-function PreviewModal( { html, onClose } ) {
-    return (
-        <div className="modal preview-modal show d-block" tabIndex="-1">
-            <div className="modal-dialog">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">Preview</h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={onClose}
-                        ></button>
-                    </div>
-                    <div className="modal-body">
-                        <div dangerouslySetInnerHTML={{ __html: html }} />
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function ExportModal( { html, onClose } ) {
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText( html );
-    };
-
-    return (
-        <div className="modal show d-block" tabIndex="-1">
-            <div className="modal-dialog">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">Export HTML</h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={onClose}
-                        ></button>
-                    </div>
-                    <div className="modal-body">
-                        <div className="export-code">{html}</div>
-                        <button
-                            className="btn btn-primary mt-3"
-                            onClick={copyToClipboard}
-                        >
-                            <i data-lucide="Clipboard"></i> Copy to Clipboard
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// Initialize Lucide icons after each render
-React.useEffect( () => {
-    lucide.createIcons();
-} );
 
 // Render the app
 const root = ReactDOM.createRoot( document.getElementById( 'root' ) );

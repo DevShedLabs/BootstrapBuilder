@@ -1,11 +1,15 @@
 /* Layout Styles */
+:root {
+	--sidebar_width: 300px;
+}
+
 .components-sidebar {
 	background-color: #fff;
 	border-right:     1px solid #dee2e6;
 	height:           100vh;
 	padding:          20px;
 	position:         fixed;
-	width:            300px;
+	width:            var(--sidebar_width);
 	overflow-y:       auto;
 }
 
@@ -64,13 +68,20 @@
 	padding-bottom:  10px;
 }
 
+
+.builder-content {
+	flex-grow: 1; /* Allow the main content to grow and take the remaining space */
+	width:     calc(100% - var(--sidebar_width)); /* Subtract sidebar width */
+}
+
 .empty-canvas {
 	align-items:     center;
 	color:           #6c757d;
 	display:         flex;
 	flex-direction:  column;
 	justify-content: center;
-	min-height:      300px;
+	min-height:      500px;
+	width:           100%; /* Ensure it takes the full width of the builder-content */
 }
 
 .preview-modal .modal-dialog {
@@ -85,4 +96,50 @@
 	overflow-y:    auto;
 	padding:       15px;
 	white-space:   pre-wrap;
+}
+
+.modal-backdrop {
+	background-color: rgba(0, 0, 0, 0.5);
+	position:         fixed;
+	top:              0;
+	left:             0;
+	right:            0;
+	bottom:           0;
+}
+
+.component-header span svg {
+	margin-right: 8px;
+}
+
+.component-icon {
+	width:        18px;
+	height:       18px;
+	margin-right: 8px;
+}
+
+.action-icon {
+	width:  16px;
+	height: 16px;
+}
+
+.empty-canvas-icon {
+	width:         48px;
+	height:        48px;
+	margin-bottom: 15px;
+}
+
+.handle-icon {
+	cursor: move;
+	width: 16px;
+	height: 16px;
+	color: #6c757d;
+}
+
+.component-content {
+	position: relative;
+	min-height: 30px;
+}
+
+.component-wrapper {
+	transition: opacity 0.2s ease;
 }
