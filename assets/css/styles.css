@@ -89,6 +89,10 @@
 	max-width: 90%;
 }
 
+.preview-modal .modal-body {
+	padding: 0;
+}
+
 .export-code {
 	background:    #f8f9fa;
 	border-radius: 6px;
@@ -132,7 +136,7 @@
 	font-size:    16px;
 }
 
-.empty-canvas-icon {
+.empty-canvas i {
 	width:         48px;
 	height:        48px;
 	margin-bottom: 15px;
@@ -192,12 +196,6 @@
 /* Visual feedback for dragging */
 .component-wrapper.dragging {
 	opacity: 0.5;
-}
-
-/* Override some existing styles */
-.dropzone {
-	position:   relative;
-	min-height: 200px;
 }
 
 .dropzone.active {
