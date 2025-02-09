@@ -41,15 +41,22 @@ const componentTemplates = {
         icon:     'rectangle-list',
         template: `<div class="hero bg-primary text-white py-5">
             <div class="container">
-                <h1>Hero Title</h1>
-                <p class="lead">Hero description text</p>
+            <div class="row">
+<div class="col-md-6 text-center py-5">
+    <h1>Hero Title</h1>
+    <p class="lead">Hero description text</p>
+</div>
+<div class="col-md-6">
+    <img src="https://place-hold.it/500x400" class="img-fluid" alt="Placeholder" />
+</div>
+            </div>
             </div>
         </div>`
     },
     footer:          {
         name:     'Footer',
         icon:     'arrows-down-to-line',
-        template: `<footer class="footer py-4 bg-light">
+        template: `<footer class="footer py-4 bg-dark text-white">
             <div class="container">
                 <span class="text-muted">Footer content</span>
             </div>
@@ -319,15 +326,18 @@ const ComponentWrapper = ( {
                 <span className="d-flex align-items-center">
                     <i className="move-up fa fa-sort-up me-2" />
                     <i className="move-down fa fa-sort-down me-2" />
-                    <Icon name={componentTemplates[ component.type ].icon} className="component-icon" />
-                    {componentTemplates[ component.type ].name}
+                    <span className="block-title">{componentTemplates[ component.type ].name}</span>
                 </span>
                 <div>
                     <button
                         className="btn btn-sm btn-outline-primary me-2"
                         onClick={() => setIsEditing( !isEditing )}
                     >
-                       <i className="fa fa-pencil"></i>
+                       <i className="fa fa-code"></i>
+                    </button>
+                    <button
+                        className="btn btn-sm btn-outline-primary me-2">
+                        <i className="fa fa-pencil"></i>
                     </button>
                     <button
                         className="btn btn-sm btn-outline-danger"
@@ -344,7 +354,7 @@ const ComponentWrapper = ( {
                         className="form-control mb-2"
                         value={editContent}
                         onChange={( e ) => setEditContent( e.target.value )}
-                        rows="3"
+                        rows="20"
                     />
                     <div className="d-flex gap-2">
                         <button

@@ -241,6 +241,10 @@
 	color: #0d6efd;
 }
 
-.component-header .component-icon {
+.component-header .component-icon, .component-header .block-title {
 	margin-left: 35px;
+}
+
+.footer.bg-dark.text-white .text-muted {
+	color: #eee !important;
 }
