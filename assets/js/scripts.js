@@ -12,29 +12,14 @@ const Icon = ( { name, className = "" } ) => {
 
 // Component Templates
 const componentTemplates = {
-    container:       {
-        name:     'Container',
-        icon:     'square',
-        template: '<div class="container">Container content</div>'
-    },
-    fluid_container: {
-        name:     'Fluid Container',
-        icon:     'rectangle-horizontal',
-        template: '<div class="container-fluid">Fluid Container content</div>'
-    },
-    section:         {
-        name:     'Section',
-        icon:     'rows',
-        template: '<section class="section">Section content</section>'
-    },
     header:          {
         name:     'Header',
-        icon:     'panel-top',
+        icon:     'arrows-up-to-line',
         template: '<header class="header py-4">Header content</header>'
     },
     nav:             {
         name:     'Navigation',
-        icon:     'navigation',
+        icon:     'ellipsis',
         template: `<nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Navbar</a>
@@ -53,7 +38,7 @@ const componentTemplates = {
     },
     hero:            {
         name:     'Hero Section',
-        icon:     'layout-template',
+        icon:     'rectangle-list',
         template: `<div class="hero bg-primary text-white py-5">
             <div class="container">
                 <h1>Hero Title</h1>
@@ -61,9 +46,33 @@ const componentTemplates = {
             </div>
         </div>`
     },
+    footer:          {
+        name:     'Footer',
+        icon:     'arrows-down-to-line',
+        template: `<footer class="footer py-4 bg-light">
+            <div class="container">
+                <span class="text-muted">Footer content</span>
+            </div>
+        </footer>`
+    },
+    container:       {
+        name:     'Container',
+        icon:     'square',
+        template: '<div class="container">Container content</div>'
+    },
+    fluid_container: {
+        name:     'Fluid Container',
+        icon:     'square-full',
+        template: '<div class="container-fluid">Fluid Container content</div>'
+    },
+    section:         {
+        name:     'Section',
+        icon:     'bars-progress',
+        template: '<section class="section">Section content</section>'
+    },
     row:             {
         name:     'Row',
-        icon:     'rows-3',
+        icon:     'bars',
         template: '<div class="row">Row content</div>'
     },
     col:             {
@@ -73,42 +82,42 @@ const componentTemplates = {
     },
     heading1:        {
         name:     'Heading 1',
-        icon:     'heading-1',
+        icon:     'heading',
         template: '<h1>Heading 1</h1>'
     },
     heading2:        {
         name:     'Heading 2',
-        icon:     'heading-2',
+        icon:     'heading',
         template: '<h2>Heading 2</h2>'
     },
     heading3:        {
         name:     'Heading 3',
-        icon:     'heading-3',
+        icon:     'heading',
         template: '<h3>Heading 3</h3>'
     },
     heading4:        {
         name:     'Heading 4',
-        icon:     'heading-4',
+        icon:     'heading',
         template: '<h4>Heading< 4/h4>'
     },
     paragraph:       {
         name:     'Paragraph',
-        icon:     'pilcrow',
+        icon:     'paragraph',
         template: '<p>Lorem ipsum dolor sit amet</p>'
     },
     button:          {
         name:     'Button',
-        icon:     'pointer',
+        icon:     'hand-pointer',
         template: '<button class="btn btn-primary">Button</button>'
     },
     image:           {
         name:     'Image',
         icon:     'image',
-        template: '<img src="https://via.placeholder.com/300x200" class="img-fluid" alt="Placeholder" />'
+        template: '<img src="https://place-hold.it/300x200" class="img-fluid" alt="Placeholder" />'
     },
     list:            {
         name:     'List Group',
-        icon:     'list-ordered',
+        icon:     'list',
         template: `<ul class="list-group">
             <li class="list-group-item">List item 1</li>
             <li class="list-group-item">List item 2</li>
@@ -129,17 +138,8 @@ const componentTemplates = {
     },
     alert:           {
         name:     'Alert',
-        icon:     'alert-triangle',
+        icon:     'triangle-exclamation',
         template: '<div class="alert alert-primary">Alert message</div>'
-    },
-    footer:          {
-        name:     'Footer',
-        icon:     'panel-bottom',
-        template: `<footer class="footer py-4 bg-light">
-            <div class="container">
-                <span class="text-muted">Footer content</span>
-            </div>
-        </footer>`
     }
 };
 
@@ -317,7 +317,8 @@ const ComponentWrapper = ( {
         >
             <div className="component-header">
                 <span className="d-flex align-items-center">
-                    <Icon name="grip" className="fa fa-grip-vertical me-2" />
+                    <i className="move-up fa fa-sort-up me-2" />
+                    <i className="move-down fa fa-sort-down me-2" />
                     <Icon name={componentTemplates[ component.type ].icon} className="component-icon" />
                     {componentTemplates[ component.type ].name}
                 </span>

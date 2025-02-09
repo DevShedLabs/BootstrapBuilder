@@ -60,6 +60,7 @@
 }
 
 .component-header {
+	position:        relative;
 	align-items:     center;
 	border-bottom:   1px solid #dee2e6;
 	display:         flex;
@@ -203,16 +204,6 @@
 	background-color: rgba(13, 110, 253, 0.1);
 }
 
-/* Base icon styles */
-.lucide {
-	width:           16px;
-	height:          16px;
-	stroke-width:    2;
-	stroke-linecap:  round;
-	stroke-linejoin: round;
-	fill:            none;
-}
-
 /* Component sidebar icons */
 .component-icon {
 	width:        22px;
@@ -220,41 +211,38 @@
 	margin-right: 8px;
 }
 
-/* Main action icons in header */
-.main-actions .lucide {
-	width:        18px;
-	height:       18px;
-	margin-right: 5px;
-}
-
-/* Button action icons */
-.btn .lucide {
-	width:        16px;
-	height:       16px;
-	margin-right: 4px;
-	margin-top:   -4px;
-}
-
 /* Empty canvas plus icon */
 .empty-canvas-icon {
 	width:         48px !important;
 	height:        48px !important;
 	margin-bottom: 15px;
+	font-size:     40px;
 	color:         #6c757d;
 }
 
-/* Grip handle for dragging */
-.grip-handle {
-	width:        16px;
-	height:       16px;
-	color:        #6c757d;
-	cursor:       move;
-	margin-right: 8px;
+
+.move-up, .move-down {
+	width:        24px;
+	height:       24px;
+	font-size:    34px;
+	margin-right: 4px;
+	cursor:       pointer;
+	color:        #ddd;
+	position:     absolute;
 }
 
-/* Export and preview modal icons */
-.modal .lucide {
-	width:        16px;
-	height:       16px;
-	margin-right: 4px;
+.move-up {
+	top: 0;
+}
+
+.move-down {
+	bottom: 15px;
+}
+
+.move-up:hover, .move-down:hover {
+	color: #0d6efd;
+}
+
+.component-header .component-icon {
+	margin-left: 35px;
 }
